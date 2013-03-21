@@ -1,15 +1,15 @@
 <?php
 /*
-Plugin Name: XML Sitemap Feed
+Plugin Name: XML Sitemap & Google News Feeds
 Plugin URI: http://status301.net/wordpress-plugins/xml-sitemap-feed/
-Description: Creates a feed that complies with the XML Sitemap protocol ready for indexing by Google, Yahoo, Bing, Ask and others. Happy with it? Please leave me a <strong><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ravanhagen%40gmail%2ecom&item_name=XML%20Sitemap%20Feed&item_number=3%2e8&no_shipping=0&tax=0&bn=PP%2dDonationsBF&charset=UTF%2d8&lc=us">Tip</a></strong> for development and support time. Thanks :)
+Description: Creates a feed that complies with the XML Sitemap protocol ready for indexing by Google, Yahoo, Bing, Ask and others. Happy with it? Please leave me a <strong><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ravanhagen%40gmail%2ecom&item_name=XML%20Sitemap%20Feed&item_number=4%2e0&no_shipping=0&tax=0&bn=PP%2dDonationsBF&charset=UTF%2d8&lc=us">Tip</a></strong> for development and support time. Thanks :)
 Text Domain: xml-sitemap-feed
-Version: 3.9.2
+Version: 4.0.1
 Author: RavanH
 Author URI: http://status301.net/
 */
 
-/*  Copyright 2010 RavanH  (http://status301.net/ email : ravanhagen@gmail.com)
+/*  Copyright 2013 RavanH http://status301.net/ email: ravanhagen@gmail.com
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,10 +20,6 @@ Author URI: http://status301.net/
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 /* --------------------
@@ -32,58 +28,102 @@ Author URI: http://status301.net/
  *
  * FILTERS
  *	xml_sitemap_url	->	Filters the URL used in the sitemap reference in robots.txt
- *				(receives an ARRAY and MUST return one; can be multiple urls) 
+ *	(deprecated)			(receives an ARRAY and MUST return one; can be multiple urls) 
  *				and for the home URL in the sitemap (receives a STRING and MUST
  *				return one) itself. Useful for multi language plugins or other 
  *				plugins that affect the blogs main URL... See pre-defined filter
  *				XMLSitemapFeed::qtranslate() in XMLSitemapFeed.class.php as an
  *				example.
+ *      xmlsf_defaults ->       Filters the default array values for different option groups.
+ 
  * ACTIONS
  *	[ none at this point, but feel free to request, suggest or submit one :) ]
  *	
  */
 
 if(!empty($_SERVER['SCRIPT_FILENAME']) && 'xml-sitemap.php' == basename($_SERVER['SCRIPT_FILENAME']))
-	die('You can not access this page directly!');
+	die('You may not access this file directly!');
 
 /* --------------------
  *      CONSTANTS
  * -------------------- */
 
-	define('XMLSF_VERSION', '3.9.2');
+/* The following constants can be used to change plugin defaults by defining them in wp-config.php */
+
+/* 
+ * XMLSF_POST_TYPE 
+ * 
+ * Comma seperated list of post types.
+ * default: 'any'
+ *
+ * example:
+ * define('XMLSF_POST_TYPE', 'post,page');
+ */
+ 
+/* 
+ * XMLSF_NAME 
+ * 
+ * Pretty permalink name for the main sitemap (index)
+ */
+if ( !defined('XMLSF_NAME') )
+	define('XMLSF_NAME', 'sitemap.xml');
+
+/* 
+ * XMLSF_POST_TYPE_NEWS_TAGS 
+ * 
+ * Post types to append sitemap news tags to in regular sitemaps.
+ * Does not have effect when News sitemap is switched of in site settings.
+ * default: 'post'
+ *
+ * example:
+ * define('XMLSF_POST_TYPE_NEWS_TAGS', 'post,mycustomtype');
+ */
+
+
+/* 
+ * XMLSF_NEWS_NAME 
+ * 
+ * Pretty permalink name for the news sitemap
+ */
+if ( !defined('XMLSF_NEWS_NAME') )
+	define('XMLSF_NEWS_NAME', 'sitemap-news.xml');
+	
+/* 
+ * XMLSF_NEWS_POST_TYPE 
+ * 
+ * Post types to include in dedicated news sitemap
+ */
+if ( !defined('XMLSF_NEWS_POST_TYPE') )
+	define('XMLSF_NEWS_POST_TYPE', 'post');
+
+/*
+ * XMLSF_GOOGLE_NEWS_TITLE
+ *
+ * Google News name, if different than site name
+ * TODO
+ */
+
+
+/* The following constants should not be changed */
+
+	define('XMLSF_VERSION', '4.0.1');
 
 if ( file_exists ( dirname(__FILE__).'/xml-sitemap-feed' ) )
 	define('XMLSF_PLUGIN_DIR', dirname(__FILE__) . '/xml-sitemap-feed');
 else
 	define('XMLSF_PLUGIN_DIR', dirname(__FILE__));
 
-/* The following constants can be overridden by defining them in wp-config.php */
-
-if ( !defined('XMLSF_MEMORY_LIMIT') )
-	define('XMLSF_MEMORY_LIMIT', '256M');
-
-if ( !defined('XMLSF_POST_TYPE') )
-	define('XMLSF_POST_TYPE', 'any');
-
-if ( !defined('XMLSF_NEWS_POST_TYPE') )
-	define('XMLSF_NEWS_POST_TYPE', 'post');
-
-if ( !defined('XMLSF_NAME') )
-	define('XMLSF_NAME', 'sitemap.xml');
-
-if ( !defined('XMLSF_NEWS_NAME') )
-	define('XMLSF_NEWS_NAME', 'sitemap-news.xml');
-
-/* -----------------
- *      CLASS
- * ----------------- */
-
-if ( class_exists('XMLSitemapFeed') || include( XMLSF_PLUGIN_DIR . '/XMLSitemapFeed.class.php' ) )
-	XMLSitemapFeed::init();
 
 /* -------------------------------------
  *      MISSING WORDPRESS FUNCTIONS
  * ------------------------------------- */
 
 include_once(XMLSF_PLUGIN_DIR . '/hacks.php');
+
+/* ----------------------
+ *     INSTANTIATE
+ * ---------------------- */
+
+if ( class_exists('XMLSitemapFeed') || include_once( XMLSF_PLUGIN_DIR . '/includes/core.php' ) )
+	$xmlsf = new XMLSitemapFeed();
 

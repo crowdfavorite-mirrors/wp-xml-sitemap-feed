@@ -25,7 +25,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>'; ?>
 	</div>
 	<div id="content">
 		<table cellpadding="5">
-			<tr style="border-bottom:1px black solid;">
+			<tr class="high">
 				<th>#</th>
 				<th>URL</th>
 				<th>Priority</th>

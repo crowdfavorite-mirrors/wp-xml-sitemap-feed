@@ -21,63 +21,38 @@ echo '<?xml version="1.0" encoding="'.get_bloginfo('charset').'"?><?xml-styleshe
 
 global $xmlsf;
 ?>
-<!-- home page(s) -->
 	<sitemap>
-		<loc><?php 
-			// hook for filter 'xml_sitemap_url' provides a string here and MUST get a string returned
-			$url = apply_filters( 'xml_sitemap_url', trailingslashit(home_url()) );
-			if ( is_string($url) ) 
-				echo esc_url( $url ); 
-			else 
-				echo esc_url( trailingslashit(home_url()) );		
-			if (''==get_option('permalink_structure'))
-				echo '?feed='.$xmlsf->base_name.'-home';
-			else
-				echo $xmlsf->base_name.'-home.'.$xmlsf->extension; ?></loc>
+		<loc><?php echo $xmlsf->get_index_url('home'); ?></loc>
+		<lastmod><?php echo mysql2date('Y-m-d\TH:i:s+00:00', get_lastdate( 'gmt' ), false); ?></lastmod>
 	</sitemap>
-<!-- post types -->
 <?php
 // add rules for custom public post types
-foreach ( $xmlsf->get_post_types() as $post_type ) {
-	$count = wp_count_posts( $post_type['name'] );
-	if ( $count->publish > 0 && isset($post_type['active']) ) {
+foreach ( $xmlsf->have_post_types() as $post_type ) {
+
+	if (!empty($post_type['archive'])) 
+		$archive = $post_type['archive']; 
+	else 
+		$archive = '';
+	foreach ( $xmlsf->get_archives($post_type['name'],$archive) as $m => $url ) {
 ?>
 	<sitemap>
-		<loc><?php 
-			// hook for filter 'xml_sitemap_url' provides a string here and MUST get a string returned
-			$url = apply_filters( 'xml_sitemap_url', trailingslashit(home_url()) );
-			if ( is_string($url) ) 
-				echo esc_url( $url ); 
-			else 
-				echo esc_url( trailingslashit(home_url()) );		
-			if (''==get_option('permalink_structure'))
-				echo '?feed='.$xmlsf->base_name.'-posttype_'.$post_type['name'];
-			else
-				echo $xmlsf->base_name.'-posttype-'.$post_type['name'].'.'.$xmlsf->extension; ?></loc>
-		<lastmod><?php echo mysql2date('Y-m-d\TH:i:s+00:00', get_lastdate( 'gmt', $post_type['name'] ), false); ?></lastmod>
+		<loc><?php echo $url; ?></loc>
+		<lastmod><?php echo mysql2date('Y-m-d\TH:i:s+00:00', get_lastmodified( 'gmt', $post_type['name'], $m ), false); ?></lastmod>
 	</sitemap>
 <?php 
 	}
 }
 ?>
-<!-- taxonomy types -->
 <?php
 	// add rules for custom public post taxonomies
 foreach ( $xmlsf->get_taxonomies() as $taxonomy ) {
+
 	if ( wp_count_terms( $taxonomy ) > 0 ) {
+	$obj = get_taxonomy($taxonomy);
 ?>
 	<sitemap>
-		<loc><?php 
-			// hook for filter 'xml_sitemap_url' provides a string here and MUST get a string returned
-			$url = apply_filters( 'xml_sitemap_url', trailingslashit(home_url()) );
-			if ( is_string($url) ) 
-				echo esc_url( $url ); 
-			else 
-				echo esc_url( trailingslashit(home_url()) );
-			if (''==get_option('permalink_structure'))
-				echo '?feed='.$xmlsf->base_name.'-taxonomy&amp;taxonomy='.$taxonomy;
-			else
-				echo $xmlsf->base_name.'-taxonomy-'.$taxonomy.'.'.$xmlsf->extension; ?></loc>
+		<loc><?php echo $xmlsf->get_index_url('taxonomy', $taxonomy); ?></loc>
+		<lastmod><?php echo mysql2date('Y-m-d\TH:i:s+00:00', get_lastdate( 'gmt', $obj->object_type[0] ), false); ?></lastmod>
 	</sitemap>
 <?php 
 // TODO add lastmod ?
@@ -85,3 +60,4 @@ foreach ( $xmlsf->get_taxonomies() as $taxonomy ) {
 }
 
 ?></sitemapindex>
+<?php $xmlsf->_e_usage(); ?>

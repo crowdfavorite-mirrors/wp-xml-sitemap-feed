@@ -1,24 +1,24 @@
 === XML Sitemap & Google News Feeds ===
 Contributors: RavanH
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ravanhagen%40gmail%2ecom&item_name=XML%20Sitemap%20Feed&item_number=3%2e8&no_shipping=0&tax=0&bn=PP%2dDonationsBF&charset=UTF%2d8&lc=us
-Tags: xml sitemap, news sitemap, sitemap.xml, multisite, Google, Google News, Yahoo, Bing, Live, MSN, seo, wpmu, feed
-Requires at least: 3.1
+Tags: sitemap, xml sitemap, news sitemap, sitemap.xml, robots.txt, Google, Google News, Yahoo, Bing, seo, feed, polylang
+Requires at least: 3.2
 Tested up to: 3.5.1
-Stable tag: 4.0.1
+Stable tag: 4.1.4
 
-Feeds that comply with the XML Sitemap and Google News protocol for fast indexing by Google, Yahoo, Bing, Ask and others. Multi-Site and Multi-Lingual compatible!
+Feeds that comply with the XML Sitemap and Google News protocol for the hungry spiders. Multisite compatible.
 
 == Description ==
 
-This plugin dynamically creates feeds that comply with the **XML Sitemap** and the **Google News Sitemap** protocol. It is Multi-Site and **Polylang** compatible and there are no files created. Some new options under the Privacy settings on **Settings > Reading** allow control over the sitemaps, which post and taxonomy types are included and any additional robots.txt rules.
+This plugin dynamically creates feeds that comply with the **XML Sitemap** and the **Google News Sitemap** protocol. **Multisite** and **Polylang** compatible and there are no files created. Options can be found on **Settings > Reading** to control which sitemaps, which post and taxonomy types are included, how priority is calculated, who to ping and set additional robots.txt rules.
 
-You or site owners on your Multi-site network will not be bothered with complicated settings like other XML Sitemap plugins. XML sitemap values like ChangeFreq and URL Priority are auto-calculated based on post age and comment activity.
+You or site owners on your Multisite network will not be bothered with complicated settings like most other XML Sitemap plugins. The default settings will suffice in most cases and XML sitemap values like ChangeFreq and URL Priority are auto-calculated based on post age and comment activity.
 
-The feeds become instantly available: One XML Sitemap on yourblogurl.tld/sitemap.xml (or yourblogurl.tld/?feed=sitemap), ready for indexing by search engines like Google, Yahoo, MSN, Ask.com and others. And one Google News Sitemap on yourblogurl.tld/sitemap-news.xml (or yourblogurl.tld/?feed=sitemap-news), ready for indexing by Google News. Both are automatically referenced in the dynamically created **robots.txt** on yourblogurl.tld/robots.txt to tell search engines where to find your XML Sitemaps.
+The XML Sitemap Index becomes instantly available on yourblog.url/sitemap.xml (or yourblog.url/?feed=sitemap) containing references to posts and pages by default, ready for indexing by search engines like Google, Yahoo, MSN, Ask.com and others. When the Google News Sitemap is activated, it will become available on yourblog.url/sitemap-news.xml (or yourblog.url/?feed=sitemap-news), ready for indexing by Google News. Both are automatically referenced in the dynamically created **robots.txt** on yourblog.url/robots.txt to tell search engines where to find your XML Sitemaps. And both are sent by ping to Google and Bing on each new publication.
 
 Please read the FAQ's for info on how to get your articles listed on Google News.
 
-**Compatible with caching plugins** like WP Super Cache, W3 Total Cache and Quick Cache that cache feeds, allowing a faster serving to the hungry, impatient (!) spider.
+**Compatible with caching plugins** like WP Super Cache, W3 Total Cache and Quick Cache that cache feeds, allowing a faster serving to the impatient (aren't we all when hungry?) spider.
 
 **NOTES:** 
 
@@ -26,32 +26,31 @@ Please read the FAQ's for info on how to get your articles listed on Google News
 
 2. On large sites, it is advised to use a good caching plugin like **Quick Cache**, **WP Super Cache** or **W3 Total Cache** to improve your site _and_ sitemap performance.
 
-= Advantages = 
+= Features = 
 
-* The main advantage of this plugin over other XML Sitemap plugins is **simplicity**. No need to change file or folder permissions, move files or spend time on a difficult plugin options page. In fact, there are no options at all!
+* The main advantage of this plugin over other XML Sitemap plugins is **simplicity**. No need to change file or folder permissions, move files or spend time tweaking difficult plugin options.
 * Completely **automatic** post URL _priority_ and _change frequency_ calculation based on post age and comment and trackback activity.
 * Works out-of-the-box, even on **multi-site / shared codebase / multi-blog setups** like WordPress MU, WP 3.0 in MultiSite (WPMS) mode and others. 
 * Also works upon **Network Activate** or placed in **/mu-plugins/** on WP 3.0 in MS mode and WPMU and even takes care to exclude any tags blogs to avoid malus points for link spamming.
 * Compatible with multi-lingual sites using **Polylang** to allow all languages to be indexed equally.
+* Pings Google and Bing on new post publication.
+* Options to define which post types and taxonomies get included in the sitemap and automatic priority calculation rules.
+* Set priority per post.
+* Option to add new robots.txt rules. These can be used to further control (read: limit) the indexation of various parts of your site and subsequent spread of pagerank accross your sites pages.
 
-= Limitations =
-
-* Except by _re-saving_ older posts from time to time (keeping the lastmod date fairly recent) there is no way to manually control the priority of individual posts/pages in the sitemap. See the Faq's for more.
-* This plugin does not ping any search engines. But then, WordPress does this by default already via the Ping-o-Matic service so why bother? See the Faq's for more.
-* Because the feed is dynamically created, on _very_ large sites the creation process might take a while. Search engines are said to have a short fuse about waiting for a sitemap, so you may want to consider using a cache plugin that also (pre)caches feeds. If you are unfamiliar with caching and server setup start with an easy caching plugin such as **Quick Cache**. For more options (and better performance) you might find solace in **WP Super Cache** or **W3 Total Cache**.
-* On **VERY** large sites (read: over 10.000 posts) with limited memory assigned to PHP, the generation of the sitemap might cause a problem when the process runs out of memory. See the FAQ's for tips to increase the PHP memory limit on your server.
 
 = Translations =
 
-- **Dutch** * Author: [R.A. van Hagen](http://status301.net) (version 4.0)
-- **French** * Author: [R.A. van Hagen](http://status301.net) (version 4.0)
+- **Dutch** * Author: [R.A. van Hagen](http://status301.net) (version 4.1)
+- **French** * Author: [R.A. van Hagen](http://status301.net) (version 4.1)
+- **Serbian** * Author: [WPdiscounts](http://wpdiscounts.com) (version 4.1) 
 - **Ukrainian** * Author: [Cmd Software](http://www.cmd-soft.com/) (version 4.0) 
 
 New transtations will be accepted and listed here. See translation instructions under [Other Notes](http://wordpress.org/extend/plugins/xml-sitemap-feed/other_notes).
 
 = Credits =
 
-XML Sitemap Feed was originally based on the discontinued plugin Standard XML Sitemap Generator by Patrick Chia. Many thanks! Since then, it has been completely rewritten and extended in many ways.
+XML Sitemap Feed was originally based on the discontinued plugin Standard XML Sitemap Generator by Patrick Chia. Since then, it has been completely rewritten and extended in many ways.
 
 
 == Installation ==
@@ -72,7 +71,7 @@ Follow these steps:
 
 2. Upload the zip file via the Plugins > Add New > Upload page &hellip; OR &hellip; unpack and upload with your favourite FTP client to the /plugins/ folder.
 
-3. Activate the plugin on the Plug-ins page.
+3. Activate the plugin on the Plugins page.
 
 4. If you have been using another XML Sitemap plugin before, check your site root and remove any created sitemap.xml file that remained there.
 
@@ -91,13 +90,9 @@ Installed alongside [WordPress MU Sitewide Tags Pages](http://wordpress.org/exte
 
 == Frequently Asked Questions ==
 
-= Can I run this on a WPMU / WP3+ Multi-Site setup? =
+= Where are the options? =
 
-Yes. In fact, it has been designed for it. Tested on WPMU 2.9.2 and WPMS 3.0.1 both with normal activation and with Network Activate / Site Wide Activate.
-
-= Can I run this plugin from /mu-plugins/ on WP3.0 MS or WPMU ? =
-
-Yes. Upload the complete /xml-sitemap-feed/ directory to /wp-content/mu-plugins/ and move the file xml-sitemap.php one dir up.
+See the XML Sitemaps section on **Settings > Reading**.
 
 = How do I get my latest articles listed on Google News? =
 
@@ -107,41 +102,23 @@ You will also want to add the sitemap to your [Google Webmasters Tools account](
 
 = My Google News Sitemap is empty! =
 
-The rules of the Google News game are that you do not feed the cookie monster any stale food. Older than 2 days is bad. You need to bake him some fresh bread ;)
-
-= How are the values for priority and changefreq calculated? =
-
-The front page has a fixed priority of 100% (1.0). When your site has more posts than pages (you must be using WordPress for a blog), pages have a default priority of 40% (0.4) and posts  have a default priority of 80% (0.8). If your site has more pages than posts (you must be using WordPress as CMS), pages have a default priority of 80% (0.8) and posts have a default priority of 40% (0.4).
-
-Page and post priority can vary between 0% (0.0) and 100% (1.0). Page priority depends on the page level (decreasing 10% for each sub-level) and relative number of comments. Post priority depends on relative number of comments and relative last comment age or (when the post has no comments) last post modification age. 
-
-The changefreq of the front page is fixed to daily and calculated for pages and post to either daily, weekly, monthly or yearly depending on age and comment activity.
-
-Dynamic pages like category pages, tag pages and archive pages are not listed in the XML Sitemap.
+The rules of the Google News Game are that you do not feed the monster any stale food. Older than 2 days is bad. You need to bake him some fresh bread ;)
 
 = Can I manipulate values for priority and changefreq? =
 
-Yes and No. This plugin has no options page so there is no way to manually set the priority of urls in the sitemap. But there is automatic post priority calculation based on _post modifaction date_ and _comment activity_, that can either make post priority go to 100% (1.0) for posts with many and recent comments or 0% (0) for the oldest posts with no comments. 
-
-This feature can be used to your advantage: by re-saving your most important older posts from time to time, keeping the **lastmod date** fairly recent, you can ensure a priority of at least 80% (0.8) for those URLs. And if you have enough comments on on those pages, the priority can even go up to 100% (1.0).
-
-If you cannot live with these rules, edit the values `$min_priority`, `$max_priority` and `$frontpage_priority` in xml-sitemap-feed/feed-sitemap.php but be careful to NOT do an automatic upgrade or it will overwrite your customisation.
+Yes. You can find default settings for priority, changefreq and lastmod on **Settings > Reading**. A fixed priority can be set on a post by post basis too.
 
 = Do I need to submit the sitemap to search engines? =
 
 No. In normal circumstances, your site will be indexed by the major search engines before you know it. The search engines will be looking for a robots.txt file and (with this plugin activated) find a pointer in it to the XML Sitemap on your blog. The search engines will return on a regular basis to see if your site has updates. 
-( Read more about _Ping-O-Matic_ under **Does this plugin ping search engines** (below) to make sure your site is under _normal circumstances_ ;) )
 
-**But** if you have a server _without rewrite rules_, use your blog _without fancy URLs_ (meaning, you have WordPress Permalinks set to the old Default value) or have it installed in a _subdirectory_, read **Do I need to change my robots.txt** for more instructions.
+Besides that, Google and Bing are pinged upon each new publication.
+
+**NOTE:** If you have a server _without rewrite rules_, use your blog _without fancy URLs_ (meaning, you have WordPress Permalinks set to the old default value) or have it installed in a _subdirectory_, then read **Do I need to change my robots.txt** for more instructions.
 
 = Does this plugin ping search engines? =
 
-No. While other XML Sitemap plugins provide pinging to some search engines upon each post edit or publication, this plugin does not. There are two reasons for that:
-
-1. WordPress has a built-in pinging feature. Go in your WP Admin section to Settings > Writing and make sure that the text area under **Update services** contains at least `http://rpc.pingomatic.com`. Read more on [Ping-O-Matic](http://pingomatic.com) about what excellent service you are actually getting _for free with every WordPress blog_ installation!
-1. For the average website, in my experience, pinging Google or others after each little change does not benefit anything except a theoretical smaller delay in re-indexation of your website. This is only theoretical because if your site is popular and active, major search engines will likely be crawling your site on a very regular basis anyway. And if, on the other hand, your site is not high on the agenda of the major search engines, they will likely give no priority to your pings at all.
-
-You can always take a [Google Webmasters Tools account](https://www.google.com/webmasters/tools/) which will tell you many interesting things about your website, sitemap downloads, search terms and your visitors. Try it!
+Yes, Google and Bing are pinged upon each new publication. Unless you disable this feature on **Settings > Reading**.
 
 = Do I need to change my robots.txt? =
 
@@ -164,9 +141,9 @@ If you already have a robots.txt file with another Sitemap reference like it, ju
 
 No. While I would advise you to use any one of the nicer Permalink structures for better indexing, you might not be able to (or don't want to) do that. If so, you can still use this plugin: 
 
-Check to see if the URL yourblogurl.tld/?feed=sitemap does produce a feed. Now manually upload your own robots.txt file to your website root containing: 
+Check to see if the URL yourblog.url/?feed=sitemap does produce a feed. Now manually upload your own robots.txt file to your website root containing: 
 `
-Sitemap: http://yourblogurl.tld/?feed=sitemap
+Sitemap: http://yourblog.url/?feed=sitemap
 
 User-agent: *
 Allow: /
@@ -175,7 +152,7 @@ You can also choose to notify major search engines of your new XML sitemap manua
 
 = Can I change the sitemap name/URL? =
 
-No. If you have fancy URL's turned ON in WordPress (Permalinks), the sitemap url that you manually submit to Google (if you are impatient) should be `yourblogurl.tld/sitemap.xml` but if you have the Permalinks' Default option set the feed is only available via `yourblogurl.tld/?feed=sitemap`.
+No. If you have fancy URL's turned ON in WordPress (Permalinks), the sitemap url that you manually submit to Google (if you are impatient) should be `yourblogurl.tld/sitemap.xml` but if you have the Permalinks' Default option set the feed is only available via `yourblog.url/?feed=sitemap`.
 
 = Where can I customize the xml output? =
 
@@ -226,7 +203,7 @@ There is a know issue with WordPress (at least up to 2.8) not generating a robot
 
 To get around this, you might either at least write one post and give it _Private_ status or alternatively create your own robots.txt file containing:
 `
-Sitemap: http://yourblogurl.tld/sitemap.xml
+Sitemap: http://yourblog.url/sitemap.xml
 
 User-agent: *
 Allow: /
@@ -239,30 +216,34 @@ On some setups (usually using the WordPress MU Domain Mapping plugin) this error
 
 = I see only a BLANK (white) page when opening the sitemap =
 
-You might be experiencing an issue with your servers PHP memory limit. The plugin attempts to increase the memory limit to 256M by itself but in some rare cases that does not work. Or your site is just so big that that is not even enough... In those cases, you should see a messages like `PHP Fatal error: Allowed memory size of xxxxxx bytes exhausted.` in your server/account error log file.
+You might be experiencing an issue with your servers PHP memory limit. In those cases, you should see a messages like `PHP Fatal error: Allowed memory size of xxxxxx bytes exhausted.` in your server/account error log file.
+
+This can happen on large sites. To avoid these issues, there is an option to split posts over different sitemaps on Settings > Reading. Try different settings, each time revisiting the main sitemap index file and open different sitemaps listed there to check. 
 
 Read more on [Increasing memory allocated to PHP](http://codex.wordpress.org/Editing_wp-config.php#Increasing_memory_allocated_to_PHP) (try a value higher than 256M) or ask your hosting provider what you can do.
+
+= Can I run this on a WPMU / WP3+ Multi-Site setup? =
+
+Yes. In fact, it has been designed for it. Tested on WPMU 2.9.2 and WPMS 3.0.1 both with normal activation and with Network Activate / Site Wide Activate.
+
+= Can I run this plugin from /mu-plugins/ on WP3.0 MS or WPMU? =
+
+Yes. Upload the complete /xml-sitemap-feed/ directory to /wp-content/mu-plugins/ and move the file xml-sitemap.php one dir up.
 
 
 == Translation ==
 
 1. Install PoEdit on your computer.
-
-2. Open the template translation database xml-sitemap-xx_XX.po in this plugins /languages/ directory with PoEdit.
-
-3. Go to Edit > Preferences and on the tab Editor check the option to compile a .mo database on save automatically. Close with OK.
-
-4. Go to Catalog > Settings and set your name, e-mail address, language and country. Close with OK.
-
-5. Go to Catalog > Update from POT-file and select the main xml-sitemap-feed.pot file. Then accept all new and removed translation strings with OK.
-
-6. Now go ahead and start translating all the texts listed in PoEdit.
-
-7. When done, go to File > Save as... and replace the xx_XX in the file name with the appropriate language and country code for your translation. Leave the rest of the file name the same and Save.
-
-8. Upload the automatically created xml-sitemap-feed-xx_XX.mo database file (where xx_XX should now be your language and country code) to the plugins /languages/ directory on your WordPress site.
-
-9. After verifying the translations work on your site, send the .mo file to ravanhagen@gmail.com and don't forget to tell me how and with what link you would like to be mentioned in the credits!
+1. Go to this plugins /languages/ directory.
+1. If there is no .po file that corresponds with your language yet, rename the template translation database xml-sitemap-feed-xx_XX.po by replacing the xx with your language code and XX with your country code.
+1. Open the .po file of your language with PoEdit. 
+1. Go to Edit > Preferences and on the tab Editor check the option to compile a .mo database on save automatically. Close with OK.
+1. Go to Catalog > Settings and set your name, e-mail address, language and country. Close with OK.
+1. Go to Catalog > Update from POT-file and select the main xml-sitemap-feed.pot file. Then accept all new and removed translation strings with OK.
+1. Now go ahead and start translating all the texts listed in PoEdit.
+1. When done, go to File > Save to Save.
+1. Upload the automatically created xml-sitemap-feed-xx_XX.mo database file (where xx_XX should now be your language and country code) to the plugins /languages/ directory on your WordPress site.
+1. After verifying the translations work on your site, send the .mo file and, if you're willing to share it, your original .po file to ravanhagen@gmail.com and don't forget to tell me how and with what link you would like to be mentioned in the credits!
 
 Thanks for sharing your translation :)
 
@@ -275,11 +256,30 @@ Thanks for sharing your translation :)
 
 == Upgrade Notice ==
 
-= 4.0.1 =
-Bugfix release.
+= 4.1.4 =
+New: Split posts by year to improve generate speed and priority settings. Many new options. Ping search engines. Bugfixes.
 
 
 == Changelog ==
+
+= 4.1.4 =
+* BUGFIX: Pass by reference fatal error in PHP 5.4
+* BUGFIX: issue with Polylang language code in pretty permalinks setting
+* BUGFIX: unselected post types in sitemap
+* BUGFIX: 1+ Priority for sticky posts with comments
+* Dutch and French translations updated
+
+= 4.1 =
+* NEW: Ping Google and Bing on new publications
+* NEW: Set priority per post
+* NEW: Priority calculation options 
+* NEW: Option to split posts by year or month for faster generation of each sitemap
+* Reduced queries to increase performance
+* Improved Lastmod and Changefreq calculations
+* Core class improvements
+* Dropped qTranslate support
+* Dropped PHP4 support
+* BUGFIX: removed several PHP notices
 
 = 4.0.1 =
 * NEW: Dutch and French translations

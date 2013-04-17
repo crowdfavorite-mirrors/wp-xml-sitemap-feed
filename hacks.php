@@ -197,8 +197,8 @@ if( !function_exists('get_firstmodified') ) {
  * @return string The date of the last post.
  */
 if( !function_exists('get_lastdate') ) {
- function get_lastdate($timezone = 'server', $post_type = 'any') {
-	return apply_filters( 'get_lastdate', _get_time( $timezone, 'date', $post_type ), $timezone );
+ function get_lastdate($timezone = 'server', $post_type = 'any', $m = false) {
+	return apply_filters( 'get_lastdate', _get_time( $timezone, 'date', $post_type, 'last', $m ), $timezone );
  }
 }
 
@@ -215,14 +215,14 @@ if( !function_exists('get_lastdate') ) {
  * @return string The date of the oldest modified post.
  */
 if( !function_exists('get_lastmodified') ) {
- function get_lastmodified($timezone = 'server', $post_type = 'any') {
-	$lastmodified = _get_time( $timezone, 'modified', $post_type );
+ function get_lastmodified($timezone = 'server', $post_type = 'any', $m = false) {
+	//$lastmodified = _get_time( $timezone, 'modified', $post_type, 'last', $m );
 
-	$lastdate = get_lastdate($timezone, $post_type);
-	if ( $lastdate > $lastmodified )
-		$lastmodified = $lastdate;
+	//$lastdate = get_lastdate($timezone, $post_type, $m);
+	//if ( $lastdate > $lastmodified )
+	//	$lastmodified = $lastdate;
 
-	return apply_filters( 'get_lastmodified', $lastmodified, $timezone );
+	return apply_filters( 'get_lastmodified', _get_time( $timezone, 'modified', $post_type, 'last', $m ), $timezone );
  }
 }
 
@@ -239,7 +239,7 @@ if( !function_exists('get_lastmodified') ) {
  * @return string The date.
  */
 if( !function_exists('_get_time') ) {
- function _get_time( $timezone, $field, $post_type = 'any', $which = 'last' ) {
+ function _get_time( $timezone, $field, $post_type = 'any', $which = 'last', $m = 0 ) {
 	global $wpdb;
 
 	if ( !in_array( $field, array( 'date', 'modified' ) ) )
@@ -249,7 +249,7 @@ if( !function_exists('_get_time') ) {
 	
 	$order = ( $which == 'last' ) ? 'DESC' : 'ASC';
 
-	$key = ( $post_type == 'any' ) ? "{$which}post{$field}:$timezone" : "{$which}posttype{$post_type}{$field}:$timezone";
+	$key = ( $post_type == 'any' ) ? "{$which}post{$field}{$m}:$timezone" : "{$which}posttype{$post_type}{$field}{$m}:$timezone";
 
 	$date = wp_cache_get( $key, 'timeinfo' );
 
@@ -273,17 +273,27 @@ if( !function_exists('_get_time') ) {
 			$post_types = "'" . addslashes($post_type) . "'";
 		}
 
+                $where = "$wpdb->posts.post_status='publish' AND $wpdb->posts.post_type IN ({$post_types}) AND $wpdb->posts.post_date_gmt ";
+                // If a month is specified in the querystring, load that month
+		$m = preg_replace('|[^0-9]|', '', $m);
+		if ( !empty($m) ) {
+			$where .= " AND YEAR($wpdb->posts.post_date)=" . substr($m, 0, 4);
+			if ( strlen($m) > 5 )
+				$where .= " AND MONTH($wpdb->posts.post_date)=" . substr($m, 4, 2);
+		}
+
 		switch ( $timezone ) {
 			case 'gmt':
-				$date = $wpdb->get_var("SELECT post_{$field}_gmt FROM $wpdb->posts WHERE post_status = 'publish' AND post_type IN ({$post_types}) ORDER BY post_{$field}_gmt {$order} LIMIT 1");
+				$date = $wpdb->get_var("SELECT post_{$field}_gmt FROM $wpdb->posts WHERE $where ORDER BY $wpdb->posts.post_{$field}_gmt {$order} LIMIT 1");
 				break;
 			case 'blog':
-				$date = $wpdb->get_var("SELECT post_{$field} FROM $wpdb->posts WHERE post_status = 'publish' AND post_type IN ({$post_types}) ORDER BY post_{$field}_gmt {$order} LIMIT 1");
+				$date = $wpdb->get_var("SELECT post_{$field} FROM $wpdb->posts WHERE $where ORDER BY $wpdb->posts.post_{$field}_gmt {$order} LIMIT 1");
 				break;
 			case 'server':
-				$date = $wpdb->get_var("SELECT DATE_ADD(post_{$field}_gmt, INTERVAL '$add_seconds_server' SECOND) FROM $wpdb->posts WHERE post_status = 'publish' AND post_type IN ({$post_types}) ORDER BY post_{$field}_gmt {$order} LIMIT 1");
+				$date = $wpdb->get_var("SELECT DATE_ADD(post_{$field}_gmt, INTERVAL '$add_seconds_server' SECOND) FROM $wpdb->posts WHERE $where ORDER BY $wpdb->posts.post_{$field}_gmt {$order} LIMIT 1");
 				break;
 		}
+
 
 		if ( $date )
 			wp_cache_set( $key, $date, 'timeinfo' );

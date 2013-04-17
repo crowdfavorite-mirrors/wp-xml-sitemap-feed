@@ -2,9 +2,9 @@
 /*
 Plugin Name: XML Sitemap & Google News Feeds
 Plugin URI: http://status301.net/wordpress-plugins/xml-sitemap-feed/
-Description: Creates a feed that complies with the XML Sitemap protocol ready for indexing by Google, Yahoo, Bing, Ask and others. Happy with it? Please leave me a <strong><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ravanhagen%40gmail%2ecom&item_name=XML%20Sitemap%20Feed&item_number=4%2e0&no_shipping=0&tax=0&bn=PP%2dDonationsBF&charset=UTF%2d8&lc=us">Tip</a></strong> for development and support time. Thanks :)
+Description: Feed the  hungry spiders in compliance with the XML Sitemap and Google News protocols. Happy with the results? Please leave me a <strong><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ravanhagen%40gmail%2ecom&item_name=XML%20Sitemap%20Feed&item_number=4%2e0&no_shipping=0&tax=0&bn=PP%2dDonationsBF&charset=UTF%2d8&lc=us">tip</a></strong> for continued development and support. Thanks :)
 Text Domain: xml-sitemap-feed
-Version: 4.0.1
+Version: 4.1.4
 Author: RavanH
 Author URI: http://status301.net/
 */
@@ -106,13 +106,14 @@ if ( !defined('XMLSF_NEWS_POST_TYPE') )
 
 /* The following constants should not be changed */
 
-	define('XMLSF_VERSION', '4.0.1');
+	define('XMLSF_VERSION', '4.1.4');
 
 if ( file_exists ( dirname(__FILE__).'/xml-sitemap-feed' ) )
 	define('XMLSF_PLUGIN_DIR', dirname(__FILE__) . '/xml-sitemap-feed');
 else
 	define('XMLSF_PLUGIN_DIR', dirname(__FILE__));
 
+define('XMLSF_PLUGIN_BASENAME', plugin_basename(__FILE__));
 
 /* -------------------------------------
  *      MISSING WORDPRESS FUNCTIONS

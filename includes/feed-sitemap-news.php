@@ -4,7 +4,7 @@
  *
  * @package XML Sitemap Feed plugin for WordPress
  */
-
+global $xmlsf;
 status_header('200'); // force header('HTTP/1.1 200 OK') for sites without posts
 header('Content-Type: text/xml; charset=' . get_bloginfo('charset'), true);
 
@@ -114,6 +114,8 @@ if ( have_posts() ) :
 <?php 
     endwhile;
 else :
+// TODO replace link to home with the last post even if it's older than 2 days...
+
 	$lastmodified_gmt = get_lastmodified('GMT'); // last posts or page modified date
 ?>
 	<url>
@@ -141,3 +143,4 @@ endif;
 	// http://www.google.com/support/news_pub/bin/answer.py?hl=nl&answer=74289
 
 ?></urlset>
+<?php $xmlsf->_e_usage(); ?>

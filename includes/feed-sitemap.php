@@ -48,11 +48,10 @@ foreach ( $xmlsf->have_post_types() as $post_type ) {
 foreach ( $xmlsf->get_taxonomies() as $taxonomy ) {
 
 	if ( wp_count_terms( $taxonomy ) > 0 ) {
-	$obj = get_taxonomy($taxonomy);
 ?>
 	<sitemap>
-		<loc><?php echo $xmlsf->get_index_url('taxonomy', $taxonomy); ?></loc>
-		<lastmod><?php echo mysql2date('Y-m-d\TH:i:s+00:00', get_lastdate( 'gmt', $obj->object_type[0] ), false); ?></lastmod>
+		<loc><?php echo $xmlsf->get_index_url('taxonomy',$taxonomy); ?></loc>
+		<lastmod><?php echo $xmlsf->get_lastmod('taxonomy',$taxonomy); ?></lastmod>
 	</sitemap>
 <?php 
 // TODO add lastmod ?

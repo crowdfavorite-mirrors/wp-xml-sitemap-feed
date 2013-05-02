@@ -3,8 +3,8 @@ Contributors: RavanH
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ravanhagen%40gmail%2ecom&item_name=XML%20Sitemap%20Feed&item_number=3%2e8&no_shipping=0&tax=0&bn=PP%2dDonationsBF&charset=UTF%2d8&lc=us
 Tags: sitemap, xml sitemap, news sitemap, sitemap.xml, robots.txt, Google, Google News, Yahoo, Bing, seo, feed, polylang
 Requires at least: 3.2
-Tested up to: 3.5.1
-Stable tag: 4.1.4
+Tested up to: 3.6
+Stable tag: 4.2.1
 
 Feeds that comply with the XML Sitemap and Google News protocol for the hungry spiders. Multisite compatible.
 
@@ -41,8 +41,8 @@ Please read the FAQ's for info on how to get your articles listed on Google News
 
 = Translations =
 
-- **Dutch** * Author: [R.A. van Hagen](http://status301.net) (version 4.1)
-- **French** * Author: [R.A. van Hagen](http://status301.net) (version 4.1)
+- **Dutch** * Author: [R.A. van Hagen](http://status301.net) (version 4.2)
+- **French** * Author: [R.A. van Hagen](http://status301.net) (version 4.2) (improved translation or suggestions accepted!)
 - **Serbian** * Author: [WPdiscounts](http://wpdiscounts.com) (version 4.1) 
 - **Ukrainian** * Author: [Cmd Software](http://www.cmd-soft.com/) (version 4.0) 
 
@@ -256,11 +256,15 @@ Thanks for sharing your translation :)
 
 == Upgrade Notice ==
 
-= 4.1.4 =
-New: Split posts by year to improve generate speed and priority settings. Many new options. Ping search engines. Bugfixes.
+= 4.2 =
+New: Image & News tags and the possibility to exclude posts and pages on a per post basis.
 
 
 == Changelog ==
+
+= 4.2 =
+* NEW: Image & News tags 
+* NEW: Exclude pages/posts
 
 = 4.1.4 =
 * BUGFIX: Pass by reference fatal error in PHP 5.4

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: XML Sitemap and Google News feeds/4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-26 15:31+0100\n"
-"PO-Revision-Date: 2013-03-26 15:31+0100\n"
+"POT-Creation-Date: 2013-04-29 19:59+0100\n"
+"PO-Revision-Date: 2013-04-29 20:00+0100\n"
 "Last-Translator: RavanH <ravanhagen@gmail.com>\n"
 "Language-Team:  <ravanhagen@gmail.com>\n"
 "Language: \n"
@@ -21,7 +21,7 @@ msgid "Donate to keep the free %s plugin development & support going!"
 msgstr ""
 
 #: ../includes/admin.php:15
-#: ../includes/admin.php:237
+#: ../includes/admin.php:269
 msgid "XML Sitemap & Google News Feeds"
 msgstr ""
 
@@ -32,11 +32,7 @@ msgstr ""
 
 #: ../includes/admin.php:16
 #, php-format
-msgid "XML Sitemaps will be disabled automatically when you set the option %1$s (above) to %2$s."
-msgstr ""
-
-#: ../includes/admin.php:16
-msgid "Search Engine Visibility"
+msgid "XML Sitemaps will be disabled automatically when you check the option %1$s at %2$s above."
 msgstr ""
 
 #: ../includes/admin.php:16
@@ -44,12 +40,16 @@ msgid "Discourage search engines from indexing this site"
 msgstr ""
 
 #: ../includes/admin.php:16
+msgid "Search Engine Visibility"
+msgstr ""
+
+#: ../includes/admin.php:16
 #, php-format
-msgid "XML Sitemaps are disabled because you have set the option %1$s (above) to %2$s."
+msgid "XML Sitemaps are disabled because you have checked the option %1$s at %2$s above."
 msgstr ""
 
 #: ../includes/admin.php:40
-#: ../includes/admin.php:360
+#: ../includes/admin.php:410
 msgid "XML Sitemaps"
 msgstr ""
 
@@ -58,149 +58,189 @@ msgid "Regular XML Sitemaps"
 msgstr ""
 
 #: ../includes/admin.php:43
-#: ../includes/admin.php:49
+#: ../includes/admin.php:48
 msgid "View"
 msgstr ""
 
-#: ../includes/admin.php:47
+#: ../includes/admin.php:46
+#: ../includes/admin.php:173
 msgid "Google News Sitemap"
 msgstr ""
 
-#: ../includes/admin.php:59
-#: ../includes/admin.php:369
+#: ../includes/admin.php:58
+#: ../includes/admin.php:419
 msgid "Include post types"
 msgstr ""
 
-#: ../includes/admin.php:91
-#: ../includes/admin.php:295
-#: ../includes/admin.php:329
+#: ../includes/admin.php:82
+#: ../includes/admin.php:327
+#: ../includes/admin.php:369
 msgid "Settings"
 msgstr ""
 
-#: ../includes/admin.php:106
-msgid "year of publication"
+#: ../includes/admin.php:97
+msgid "Year"
 msgstr ""
 
-#: ../includes/admin.php:107
-msgid "month of publication"
+#: ../includes/admin.php:98
+msgid "Month"
 msgstr ""
 
-#: ../includes/admin.php:111
+#: ../includes/admin.php:102
 msgid "Split by"
 msgstr ""
 
-#: ../includes/admin.php:121
-msgid "Split by year if you experience slow or blank sitemaps. In very rare cases, split by month is needed."
+#: ../includes/admin.php:105
+#: ../includes/admin.php:140
+msgid "None"
 msgstr ""
 
-#: ../includes/admin.php:126
-#: ../includes/admin.php:328
+#: ../includes/admin.php:112
+msgid "Split by year if you experience errors or slow sitemaps. In very rare cases, split by month is needed."
+msgstr ""
+
+#: ../includes/admin.php:117
+#: ../includes/admin.php:365
 msgid "Priority"
 msgstr ""
 
-#: ../includes/admin.php:128
-msgid "Priority can be overridden on individual posts."
+#: ../includes/admin.php:119
+msgid "Priority can be overridden on individual posts. *"
 msgstr ""
 
-#: ../includes/admin.php:128
-msgid "Maximum Priority (1.0) is reserved for the front page, individual posts and, when allowed, posts with high comment count."
-msgstr ""
-
-#: ../includes/admin.php:133
+#: ../includes/admin.php:124
 msgid "Automatically adjusts Priority according to relative age and comment count."
 msgstr ""
 
-#: ../includes/admin.php:133
+#: ../includes/admin.php:124
 msgid "Sticky posts will not be subject to reduction by age. Individual posts with fixed Priority will always keep that value."
 msgstr ""
 
-#: ../includes/admin.php:138
+#: ../includes/admin.php:129
 msgid "Update Lastmod and Changefreq on comments."
 msgstr ""
 
-#: ../includes/admin.php:138
+#: ../includes/admin.php:129
 msgid "Set this if discussion on your site warrants reindexation upon each new comment."
 msgstr ""
 
-#: ../includes/admin.php:147
-msgid "Priority settings do not affect ranking in search results in any way. They are only meant to suggest search engines which URLs to index first. Once a URL has been indexed, its Priority becomes meaningless until its Lastmod is updated."
+#: ../includes/admin.php:133
+msgid "Include:"
 msgstr ""
 
-#: ../includes/admin.php:157
-#: ../includes/admin.php:372
+#: ../includes/admin.php:138
+msgid "Image tags for"
+msgstr ""
+
+#: ../includes/admin.php:143
+msgid "Featured Image"
+msgstr ""
+
+#: ../includes/admin.php:146
+msgid "Attached images"
+msgstr ""
+
+#: ../includes/admin.php:154
+msgid "Google News tags"
+msgstr ""
+
+#: ../includes/admin.php:154
+msgid "Only set when your site has been or will soon be accepted by Google News. **"
+msgstr ""
+
+#: ../includes/admin.php:171
+msgid "* Priority settings do not affect ranking in search results in any way. They are only meant to suggest search engines which URLs to index first. Once a URL has been indexed, its Priority becomes meaningless until its Lastmod is updated."
+msgstr ""
+
+#: ../includes/admin.php:171
+msgid "Maximum Priority (1.0) is reserved for the front page, individual posts and, when allowed, posts with high comment count."
+msgstr ""
+
+#: ../includes/admin.php:173
+#, php-format
+msgid "** Google recommends using a seperate news sitemap. You can do this by checking the option %1$s at %2$s above."
+msgstr ""
+
+#: ../includes/admin.php:173
+#: ../includes/admin.php:413
+msgid "Enable XML sitemaps"
+msgstr ""
+
+#: ../includes/admin.php:183
+#: ../includes/admin.php:422
 msgid "Include taxonomies"
 msgstr ""
 
-#: ../includes/admin.php:181
+#: ../includes/admin.php:213
 msgid "No taxonomies available for the currently included post types."
 msgstr ""
 
-#: ../includes/admin.php:184
-msgid "It is generally not recommended to include taxonomy pages, unless their content brings added value. For example, when you use category descriptions with information that is not present elsewhere on your site or if taxonomy pages list posts with an excerpt that is different from, but complementary to the post content. In these cases you might consider including certain taxonomies. Otherwise, you might even consider disallowing indexation by adding specific robots.txt rules below."
+#: ../includes/admin.php:216
+msgid "It is generally not recommended to include taxonomy pages, unless their content brings added value. For example, when you use category descriptions with information that is not present elsewhere on your site or if taxonomy pages list posts with an excerpt that is different from, but complementary to the post content. In these cases you might consider including certain taxonomies. Otherwise, you might even consider disallowing indexation to prevent a possible duplicate content penalty. You can do this by adding specific robots.txt rules below."
 msgstr ""
 
-#: ../includes/admin.php:194
+#: ../includes/admin.php:226
 msgid "Google"
 msgstr ""
 
-#: ../includes/admin.php:195
+#: ../includes/admin.php:227
 msgid "Bing"
 msgstr ""
 
-#: ../includes/admin.php:199
-#: ../includes/admin.php:375
+#: ../includes/admin.php:231
+#: ../includes/admin.php:425
 msgid "Ping on Publish"
 msgstr ""
 
-#: ../includes/admin.php:218
+#: ../includes/admin.php:250
 #, php-format
 msgid "Successfully pinged for %1$s on %2$s GMT."
 msgstr ""
 
-#: ../includes/admin.php:227
+#: ../includes/admin.php:259
 #, php-format
 msgid "Rules to append to the %s generated by WordPress."
 msgstr ""
 
-#: ../includes/admin.php:228
+#: ../includes/admin.php:260
 msgid "Only add rules here when you know what you are doing, otherwise you might break search engine access to your site."
 msgstr ""
 
-#: ../includes/admin.php:228
+#: ../includes/admin.php:260
 msgid "These rules will not have effect when you are using a static robots.txt file."
 msgstr ""
 
-#: ../includes/admin.php:235
+#: ../includes/admin.php:267
 msgid "Clear all XML Sitemap Feed options from the database and start fresh with the default settings."
 msgstr ""
 
-#: ../includes/admin.php:237
+#: ../includes/admin.php:269
 #, php-format
 msgid "Disabling and reenabling the %s plugin will have the same effect."
 msgstr ""
 
-#: ../includes/admin.php:311
+#: ../includes/admin.php:344
 msgid "XML Sitemap"
 msgstr ""
 
-#: ../includes/admin.php:329
+#: ../includes/admin.php:361
+msgid "Exclude from XML Sitemap"
+msgstr ""
+
+#: ../includes/admin.php:369
 #, php-format
 msgid "Leave empty for automatic Priority as configured on %1$s > %2$s."
 msgstr ""
 
-#: ../includes/admin.php:329
+#: ../includes/admin.php:369
 msgid "Reading"
 msgstr ""
 
-#: ../includes/admin.php:363
-msgid "Enable XML sitemaps"
-msgstr ""
-
-#: ../includes/admin.php:381
+#: ../includes/admin.php:431
 msgid "Additional robots.txt rules"
 msgstr ""
 
-#: ../includes/admin.php:384
+#: ../includes/admin.php:434
 msgid "Reset XML sitemaps"
 msgstr ""
 

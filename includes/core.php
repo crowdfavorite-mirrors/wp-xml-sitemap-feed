@@ -22,11 +22,15 @@ class XMLSitemapFeed {
 	private $yes_mother = false;
 
 	private $defaults = array();
+	private $disabled_post_types = array('attachment');
 	
 	// Global values used for priority and changefreq calculation
 	private $firstdate;
 	private $lastmodified;
 	private $postmodified = array();
+	private $termmodified = array();
+	private $blogpage;
+	private $images = array();
 						
 	private function build_defaults() 
 	{
@@ -41,11 +45,16 @@ class XMLSitemapFeed {
 		// post_types
 		$this->defaults['post_types'] = array();
 		foreach ( get_post_types(array('public'=>true),'names') as $name ) {
+			// skip unallowed post types
+			if (in_array($name,$this->disabled_post_types))
+				continue;
+
 			$this->defaults['post_types'][$name] = array(
 								'name' => $name,
 								'active' => '',
 								'priority' => '0.5',
 								'dynamic_priority' => '',
+								'tags' => array('news' => '','image' => 'no')
 								);
 		}		
 
@@ -63,18 +72,25 @@ class XMLSitemapFeed {
 				$this->defaults['post_types']['post']['archive'] = 'yearly';
 			else
 				$this->defaults['post_types']['post']['archive'] = '';
-			//$this->defaults['post_types']['post']['tags'] => array('news','image','video');
+			$this->defaults['post_types']['post']['tags']['news'] = '1';
+			$this->defaults['post_types']['post']['tags']['image'] = 'featured';
 			$this->defaults['post_types']['post']['priority'] = '0.7';
 			$this->defaults['post_types']['post']['dynamic_priority'] = '1';
 		}
 
 		if ( isset($this->defaults['post_types']['page']) ) {
-			//$this->defaults['post_types']['page']['tags'] => array('image','video');
+			$this->defaults['post_types']['page']['tags'] = array('image' => 'featured');
 			$this->defaults['post_types']['page']['priority'] = '0.3';
 		}
 
+/* attachment post type is disabled... images are included with tags in post and page sitemaps
+		if ( isset($this->defaults['post_types']['attachment']) ) {
+			$this->defaults['post_types']['attachment']['tags']['image'] = 'attached';
+			$this->defaults['post_types']['attachment']['priority'] = '0.3';
+		}*/
+
 		// taxonomies
-		$this->defaults['taxonomies'] = array();// by default do not include any taxonomies
+		$this->defaults['taxonomies'] = array(); // by default do not include any taxonomies
 
 		// ping search engines
 		$this->defaults['ping'] = array(
@@ -93,7 +109,6 @@ class XMLSitemapFeed {
 		// robots
 		$this->defaults['robots'] = "Disallow: /xmlrpc.php\nDisallow: /wp-\nDisallow: /trackback/\nDisallow: ?wptheme=\nDisallow: ?comments=\nDisallow: ?replytocom\nDisallow: /comment-page-\nDisallow: /?s=\nDisallow: /wp-content/\nAllow: /wp-content/uploads/\n";
 	}
-
 
 	public function defaults($key = false) 
 	{
@@ -137,6 +152,12 @@ class XMLSitemapFeed {
 		return (!empty($return)) ? (array)$return : array();
 	}
 		
+	public function disabled_post_types() 
+	{		
+		return $this->disabled_post_types;
+
+	}
+	
 	public function get_post_types() 
 	{		
 		$return = $this->get_option('post_types');
@@ -154,11 +175,14 @@ class XMLSitemapFeed {
 		foreach ( $post_types as $type => $values ) {
 			if(!empty($values['active'])) {
 				$count = wp_count_posts( $values['name'] );
+				/*if ('attachment' == $type && $count->inherit > 0) {
+					$values['count'] = $count->inherit;
+					$return[$type] = $values;
+				} else*/
 				if ($count->publish > 0) {
 					$values['count'] = $count->publish;
-				
-					$return[$type] = $values;				
-				}					
+					$return[$type] = $values;
+				}
 			}
 		}
 
@@ -221,7 +245,7 @@ class XMLSitemapFeed {
 		return ( $robots = $this->get_option('robots') ) ? $robots : '';
 	}
 
-	public function get_do_tags( $type = 'post' ) 
+	public function do_tags( $type = 'post' ) 
 	{
 		$return = $this->get_option('post_types');
 
@@ -229,45 +253,135 @@ class XMLSitemapFeed {
 		return (!empty($return[$type]['tags'])) ? (array)$return[$type]['tags'] : array();
 	}
 	
+	public function is_home($id) {
+		
+			if ( empty($this->blogpage) ) {
+				$blogpage = get_option('page_for_posts');
+				
+				if ( !empty($blogpage) ) {
+					global $polylang;
+					if ( isset($polylang) )
+						$this->blogpage = $polylang->get_translations('post', $blogpage);
+					else
+						$this->blogpage = array($blogpage);
+				} else {
+					$this->blogpage = array('-1');
+				}
+			}
+
+			return in_array($id,$this->blogpage);
+			
+	}
 		
 	/**
 	* TEMPLATE FUNCTIONS
 	*/
 	
-	public function postmodified() 
+	public function modified($sitemap = 'post_type', $term = '') 
+	{
+		if ('post_type' == $sitemap) :
+
+			global $post;
+
+			// if blog page look for last post date
+			if ( $post->post_type == 'page' && $this->is_home($post->ID) ) {
+				//if ( empty($this->lastmodified) )
+					//$this->lastmodified = mysql2date('U',get_lastmodified('GMT','post'));
+				return get_lastmodified('GMT','post'); //$this->lastmodified;
+			}
+
+			if ( empty($this->postmodified[$post->ID]) ) {
+				$postmodified = get_post_modified_time( 'Y-m-d H:i:s', true, $post->ID );
+				$options = $this->get_option('post_types');
+
+				if( !empty($options[$post->post_type]['update_lastmod_on_comments']) )
+					$lastcomment = get_comments( array(
+								'status' => 'approve',
+								'number' => 1,
+								'post_id' => $post->ID,
+								) );
+
+				if ( isset($lastcomment[0]->comment_date_gmt) )
+					if ( mysql2date( 'U', $lastcomment[0]->comment_date_gmt ) > mysql2date( 'U', $postmodified ) )
+						$postmodified = $lastcomment[0]->comment_date_gmt;
+		
+				$this->postmodified[$post->ID] = $postmodified;
+			}
+		
+			return $this->postmodified[$post->ID];
+
+		elseif ( !empty($term) ) :
+
+			if ( is_object($term) ) {
+				if ( empty($this->termmodified[$term->term_id]) ) {
+				// get the latest post in this taxonomy item, to use its post_date as lastmod
+					$posts = get_posts ( array(
+					 	'numberposts' => 1, 
+						'no_found_rows' => true, 
+						'update_post_meta_cache' => false, 
+						'update_post_term_cache' => false, 
+						'update_cache' => false,
+						'tax_query' => array(
+								array(
+									'taxonomy' => $term->taxonomy,
+									'field' => 'slug',
+									'terms' => $term->slug
+								)
+							)
+						)
+					);
+					$this->termmodified[$term->term_id] = $posts[0]->post_date_gmt;
+				}
+				return $this->termmodified[$term->term_id];
+			} else {
+				$obj = get_taxonomy($term);
+				return get_lastdate( 'gmt', $obj->object_type[0] );
+				// uses get_lastdate() function defined in xml-sitemap/hacks.php !
+				// which is a shortcut: returns last post date, not last modified date... 
+				// TODO find the long way around (take tax type, get all terms, 
+				// do tax_query with all terms for one post and get its lastmod date)
+			}
+
+
+		else :
+
+			return '0000-00-00 00:00:00';
+
+		endif;
+	}
+
+	public function get_images() 
 	{
 		global $post;
-
-		if ( empty($this->postmodified[$post->ID]) ) {
-			$postmodified = get_post_modified_time( 'Y-m-d H:i:s', true, $post->ID );
+		if ( empty($this->images[$post->ID]) ) {
 			$options = $this->get_option('post_types');
-
-			if( !empty($options[$post->post_type]['update_lastmod_on_comments']) )
-				$lastcomment = get_comments( array(
-							'status' => 'approve',
-							'number' => 1,
-							'post_id' => $post->ID,
-							) );
-
-			if ( isset($lastcomment[0]->comment_date_gmt) )
-				if ( mysql2date( 'U', $lastcomment[0]->comment_date_gmt ) > mysql2date( 'U', $postmodified ) )
-					$postmodified = $lastcomment[0]->comment_date_gmt;
-		
-			$this->postmodified[$post->ID] = $postmodified;
+			if('attached' == $options[$post->post_type]['tags']['image']) {
+				$args = array( 'post_type' => 'attachment', 'post_mime_type' => 'image', 'numberposts' => -1, 'post_status' =>'inherit', 'post_parent' => $post->ID );
+				$attachments = get_posts($args);
+				if ($attachments) {
+					foreach ( $attachments as $attachment ) {
+						$image = wp_get_attachment_image_src( $attachment->ID, 'full' );
+						$this->images[$post->ID][] = $image[0];
+					}
+				}
+			} elseif ('featured' == $options[$post->post_type]['tags']['image']) {
+				if (has_post_thumbnail( $post->ID ) ) {
+					$image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full' );
+					$this->images[$post->ID][] = $image[0];
+				}
+			}
 		}
-		
-		return $this->postmodified[$post->ID];
+		return ( isset($this->images[$post->ID]) ) ? $this->images[$post->ID] : array();
+	}
+	
+	public function get_lastmod($sitemap = 'post_type', $term = '') 
+	{
+		return mysql2date('Y-m-d\TH:i:s+00:00', $this->modified($sitemap,$term), false);
 	}
 
-	public function get_lastmod() 
+	public function get_changefreq($sitemap = 'post_type', $term = '') 
 	{
-		return mysql2date('Y-m-d\TH:i:s+00:00', $this->postmodified(), false);
-
-	}
-
-	public function get_changefreq() 
-	{
-		$lastactivityage = ( gmdate('U') - mysql2date( 'U', $this->postmodified() ) ); // post age
+		$lastactivityage = ( gmdate('U') - mysql2date( 'U', $this->modified($sitemap,$term) ) ); // post age
 	 	
 	 	if ( ($lastactivityage/86400) < 1 ) { // last activity less than 1 day old 
 	 		$changefreq = 'hourly';
@@ -284,53 +398,76 @@ class XMLSitemapFeed {
 	 	return $changefreq;
 	}
 
-	public function get_priority() 
+	public function get_priority($sitemap = 'post_type', $term = '') 
 	{
-		global $post;
-		$options = $this->get_option('post_types');
-		$defaults = $this->defaults('post_types');
-		$priority_meta = get_metadata('post', $post->ID, '_xmlsf_priority' , true);
+		if ( 'post_type' == $sitemap ) :
+			global $post;
+			$options = $this->get_option('post_types');
+			$defaults = $this->defaults('post_types');
+			$priority_meta = get_metadata('post', $post->ID, '_xmlsf_priority' , true);
 		
-		if ( !empty($priority_meta) ) {
+			if ( !empty($priority_meta) ) {
 		
-			$priority = $priority_meta;
+				$priority = $priority_meta;
 			
-		} elseif ( !empty($options[$post->post_type]['dynamic_priority']) ) {
-		
-			$post_modified = mysql2date('U',$post->post_modified_gmt);
-		
-			if ( empty($this->lastmodified) )
-				$this->lastmodified = mysql2date('U',get_lastmodified('GMT',$post->post_type)); 
-				// last posts or page modified date in Unix seconds 
-				// uses get_lastmodified() function defined in xml-sitemap/hacks.php !
-			
-			if ( empty($this->firstdate) )
-				$this->firstdate = mysql2date('U',get_firstdate('GMT',$post->post_type)); 
-				// uses get_firstdate() function defined in xml-sitemap/hacks.php !
-			
-			if ( isset($options[$post->post_type]['priority']) )
-				$priority_value = $options[$post->post_type]['priority'];
-			else
-				$priority_value = $defaults[$post->post_type]['priority'];
-		
-			// reduce by age
-			if ( is_sticky($post->ID) )
-				$priority = $priority_value;
-			else
-				$priority = ( $this->lastmodified > $this->firstdate ) ? $priority_value - $priority_value * ( $this->lastmodified - $post_modified ) / ( $this->lastmodified - $this->firstdate ) : $priority_value;
-		
-			if ( $post->comment_count > 0 )
-				$priority = $priority + 0.1 + ( 0.9 - $priority ) * $post->comment_count / wp_count_comments($post->post_type)->approved;
+			} elseif ( !empty($options[$post->post_type]['dynamic_priority']) ) {
 
-			// and a final trim for cases where we end up above 1 (sticky posts with many comments)
-			if ($priority > 1) 
-				$priority = 1;
+				$post_modified = mysql2date('U',$post->post_modified_gmt);
+		
+				if ( empty($this->lastmodified) )
+					$this->lastmodified = mysql2date('U',get_lastmodified('GMT',$post->post_type)); 
+					// last posts or page modified date in Unix seconds 
+					// uses get_lastmodified() function defined in xml-sitemap/hacks.php !
+			
+				if ( empty($this->firstdate) )
+					$this->firstdate = mysql2date('U',get_firstdate('GMT',$post->post_type)); 
+					// uses get_firstdate() function defined in xml-sitemap/hacks.php !
+			
+				if ( isset($options[$post->post_type]['priority']) )
+					$priority_value = $options[$post->post_type]['priority'];
+				else
+					$priority_value = $defaults[$post->post_type]['priority'];
+		
+				// reduce by age
+				// NOTE : home/blog page gets same treatment as sticky post
+				if ( is_sticky($post->ID) || $this->is_home($post->ID) )
+					$priority = $priority_value;
+				else
+					$priority = ( $this->lastmodified > $this->firstdate ) ? $priority_value - $priority_value * ( $this->lastmodified - $post_modified ) / ( $this->lastmodified - $this->firstdate ) : $priority_value;
 
-		} else {
+				if ( $post->comment_count > 0 )
+					$priority = $priority + 0.1 + ( 0.9 - $priority ) * $post->comment_count / wp_count_comments($post->post_type)->approved;
+
+				// and a final trim for cases where we end up above 1 (sticky posts with many comments)
+				if ($priority > 1) 
+					$priority = 1;
+
+			} else {
+
+				$priority = ( isset($options[$post->post_type]['priority']) && is_numeric($options[$post->post_type]['priority']) ) ? $options[$post->post_type]['priority'] : $defaults[$post->post_type]['priority'];
 		
-			$priority = ( isset($options[$post->post_type]['priority']) && is_numeric($options[$post->post_type]['priority']) ) ? $options[$post->post_type]['priority'] : $defaults[$post->post_type]['priority'];
-		
-		}
+			}
+
+		elseif ( ! empty($term) ) :
+
+			$max_priority = 0.4;
+			$min_priority = 0.0;
+			// TODO make these values optional
+
+			$tax_obj = get_taxonomy($term->taxonomy);
+			$postcount = 0;
+			foreach ($tax_obj->object_type as $post_type) {
+				$_post_count = wp_count_posts($post_type);
+				$postcount += $_post_count->publish;
+			}
+
+			$priority = ( $postcount > 0 ) ? $min_priority + ( $max_priority * $term->count / $postcount ) : $min_priority;
+
+		else :
+
+			$priority = 0.5;
+
+		endif;
 		
 		return number_format($priority,1);
 	}
@@ -352,13 +489,14 @@ class XMLSitemapFeed {
 
 	public function get_excluded($post_type) 
 	{
-		global $polylang;
 		$exclude = array();
 		
 		if ( $post_type == 'page' && $id = get_option('page_on_front') ) {
-			$exclude[] = $id;
+			global $polylang;
 			if ( isset($polylang) )
-				$exclude = $polylang->get_translations('post', $id);
+				$exclude += $polylang->get_translations('post', $id);
+			else 
+				$exclude[] = $id;
 		}
 		
 		return $exclude;
@@ -519,6 +657,10 @@ class XMLSitemapFeed {
 						$request['no_found_rows'] = true;
 						$request['update_post_meta_cache'] = false;
 						$request['update_post_term_cache'] = false;
+						/*if ('attachment' == $post_type['name']) {
+							$request['post_status'] = 'inherit';
+							$request['post_mime_type'] = 'image,audio'; // ,video,audio
+						}*/
 
 						return $request;
 					}

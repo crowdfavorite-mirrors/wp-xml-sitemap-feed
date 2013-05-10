@@ -23,14 +23,19 @@
 			  $this.attr("disabled") ? $this.removeAttr("disabled") : $this.attr("disabled", "disabled");
 			});
             });
-            jQuery( "#xmlsf_sitemaps_index" ).on( \'change\', function() {
+        });
+    </script>';
+/*		echo '
+   <script type="text/javascript">
+       jQuery( document ).ready( function() {
+             jQuery( "#xmlsf_sitemaps_index" ).on( \'change\', function() {
 			jQuery("#xmlsf_post_types input:not([type=\'hidden\']),#xmlsf_post_types select,#xmlsf_taxonomies input:not([type=\'hidden\']),#xmlsf_ping input").each(function() {
 			  var $this = jQuery(this);
 			  $this.attr("disabled") ? $this.removeAttr("disabled") : $this.attr("disabled", "disabled");
 			});
             });
         });
-    </script>';
+    </script>';*/
 	}
 	
 	public function sitemaps_settings_field() {
@@ -54,7 +59,6 @@
 		$options = parent::get_post_types();
 		$defaults = parent::defaults('post_types');
 		$do_note = false;
-
 		echo '<fieldset id="xmlsf_post_types"><legend class="screen-reader-text">'.__('Include post types','xml-sitemap-feed').'</legend>
 			';
 		foreach ( get_post_types(array('public'=>true),'objects') as $post_type ) {
@@ -151,7 +155,7 @@
 						echo '
 							<li><label><input type="checkbox" name="xmlsf_post_types['.
 						$post_type->name.'][tags][news]" value="1" '.
-						checked( !empty($options[$post_type->name]['tags']['news']), true, false).' /> '.__('Google News tags','xml-sitemap-feed').'</label> <span class="description">'.__('Only set when your site has been or will soon be accepted by Google News. **','xml-sitemap-feed').'</li>';
+						checked( !empty($options[$post_type->name]['tags']['news']), true, false).' /> '.__('Google News tags','xml-sitemap-feed').'</label> <span class="description">'.__('Only set when your site has been or will soon be accepted by Google News. **','xml-sitemap-feed').'</span></li>';
 					}
 
 				echo '
@@ -168,7 +172,17 @@
 		}
 
 		echo '
-		<p class="description">'.__('* Priority settings do not affect ranking in search results in any way. They are only meant to suggest search engines which URLs to index first. Once a URL has been indexed, its Priority becomes meaningless until its Lastmod is updated.','xml-sitemap-feed').' '.__('Maximum Priority (1.0) is reserved for the front page, individual posts and, when allowed, posts with high comment count.','xml-sitemap-feed').'</p>';
+		<p class="description">'.__('* Priority settings do not affect ranking in search results in any way. They are only meant to suggest search engines which URLs to index first. Once a URL has been indexed, its Priority becomes meaningless until its Lastmod is updated.','xml-sitemap-feed').' <a href="#xmlsf_post_types_note_1_more" id="xmlsf_post_types_note_1_link">'.__('(more...)').'</a> <span id="xmlsf_post_types_note_1_more">'.__('Maximum Priority (1.0) is reserved for the front page, individual posts and, when allowed, posts with high comment count.','xml-sitemap-feed').' '.__('Priority values are taken as relative values. Setting all to the same (high) value is pointless.','xml-sitemap-feed').'</span></p>
+<script type="text/javascript">
+jQuery( document ).ready( function() {
+    jQuery("#xmlsf_post_types_note_1_more").hide();
+    jQuery("#xmlsf_post_types_note_1_link").click( function(event) {
+	event.preventDefault();
+	jQuery("#xmlsf_post_types_note_1_link").hide();
+	jQuery("#xmlsf_post_types_note_1_more").show("slow");
+    });
+});
+</script>';
 		echo '
 		<p class="description">'.sprintf(__('** Google recommends using a seperate news sitemap. You can do this by checking the option %1$s at %2$s above.','xml-sitemap-feed'),'<strong>'.__('Google News Sitemap','xml-sitemap-feed').'</strong>','<strong>'.__('Enable XML sitemaps','xml-sitemap-feed').'</strong>').'</p>';
 		echo '
@@ -178,10 +192,8 @@
 	public function taxonomies_settings_field() {
 		$options = parent::get_taxonomies();
 		$active = parent::get_option('post_types');
-		$skipped_all = true;
+		$output = '';
 
-		echo '<fieldset id="xmlsf_taxonomies"><legend class="screen-reader-text">'.__('Include taxonomies','xml-sitemap-feed').'</legend>
-			';
 		foreach ( get_taxonomies(array('public'=>true),'objects') as $taxonomy ) {
 
 			$skip = true;
@@ -190,9 +202,8 @@
 					$skip = false; 
 			if ($skip) continue; // skip if none of the associated post types are active
 			
-			$skipped_all = false;
 			$count = wp_count_terms( $taxonomy->name );
-			echo '
+			$output .= '
 				<label><input type="checkbox" name="xmlsf_taxonomies['.
 				$taxonomy->name.']" id="xmlsf_taxonomies_'.
 				$taxonomy->name.'" value="'.
@@ -204,18 +215,25 @@
 //			if ( in_array($taxonomy->name,$options) && empty($taxonomy->show_tagcloud) )
 //				echo '<span class="description error" style="color: red">'.__('This taxonomy type might not be suitable for public use. Please check the urls in the taxonomy sitemap.','xml-sitemap-feed').'</span>';
 
-			echo '
+			$output .= '
 				<br />';
 		}
 		
-		if ($skipped_all)
+		if ($output) {
+			echo '
+		<fieldset id="xmlsf_taxonomies"><legend class="screen-reader-text">'.__('Include taxonomies','xml-sitemap-feed').'</legend>
+			';
+
+			echo $output;
+
+			echo '
+			<p class="description">'.__('It is generally not recommended to include taxonomy pages, unless their content brings added value. For example, when you use category descriptions with information that is not present elsewhere on your site or if taxonomy pages list posts with an excerpt that is different from, but complementary to the post content. In these cases you might consider including certain taxonomies. Otherwise, you might even consider disallowing indexation to prevent a possible duplicate content penalty. You can do this by adding specific robots.txt rules below.','xml-sitemap-feed');
+			echo '</p>
+		</fieldset>';
+		} else {
 			echo '
 		<p style="color: red" class="error">'.__('No taxonomies available for the currently included post types.','xml-sitemap-feed').'</p>';
-
-		echo '
-		<p class="description">'.__('It is generally not recommended to include taxonomy pages, unless their content brings added value. For example, when you use category descriptions with information that is not present elsewhere on your site or if taxonomy pages list posts with an excerpt that is different from, but complementary to the post content. In these cases you might consider including certain taxonomies. Otherwise, you might even consider disallowing indexation to prevent a possible duplicate content penalty. You can do this by adding specific robots.txt rules below.','xml-sitemap-feed');
-		echo '</p>
-		</fieldset>';
+		}
 	}
 
 	public function ping_settings_field() {
@@ -223,14 +241,20 @@
 		$pings = parent::get_pings();
 		// search engines
 		$se = array(
-			'google' => __('Google','xml-sitemap-feed'),
-			'bing' => __('Bing','xml-sitemap-feed'),
+			'google' => array (
+				'name' => __('Google','xml-sitemap-feed'),
+				'uri' => 'http://www.google.com/webmasters/tools/ping?sitemap='
+				),
+			'bing' => array (
+				'name' => __('Bing','xml-sitemap-feed'),
+				'uri' => 'http://www.bing.com/ping?sitemap='
+				)
 			);
 
 		echo '
 		<fieldset id="xmlsf_ping"><legend class="screen-reader-text">'.__('Ping on Publish','xml-sitemap-feed').'</legend>
 			';
-		foreach ( $options as $name => $values ) {
+		foreach ( $se as $name => $values ) {
 
 			echo '
 				<input type="hidden" name="xmlsf_ping['.
@@ -242,7 +266,7 @@
 				$name.'][active]" id="xmlsf_ping_'.
 				$name.'" value="1"'.
 				checked( !empty($options[$name]["active"]), true, false).' /> '.
-				$se[$name].'</label>';
+				$values['name'].'</label>';
 			
 			echo ' <span class="description">';
 			if (isset($pings[$name]))

@@ -39,6 +39,14 @@ echo !empty($image) ? '
 echo '">
 ';
 
+// get site language for default language
+// bloginfo_rss('language') returns improper format so
+// we explode on hyphen and use only first part. 
+// TODO this workaround breaks (simplified) chinese :(
+$language = reset(explode('-', get_bloginfo_rss('language')));
+if ( empty($language) )
+	$language = 'en';
+
 // any ID's we need to exclude?
 $excluded = $xmlsf->get_excluded($post_type);
 

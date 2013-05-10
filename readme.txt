@@ -1,18 +1,20 @@
 === XML Sitemap & Google News Feeds ===
 Contributors: RavanH
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ravanhagen%40gmail%2ecom&item_name=XML%20Sitemap%20Feed&item_number=3%2e8&no_shipping=0&tax=0&bn=PP%2dDonationsBF&charset=UTF%2d8&lc=us
-Tags: sitemap, xml sitemap, news sitemap, sitemap.xml, robots.txt, Google, Google News, Yahoo, Bing, seo, feed, polylang
+Tags: sitemap, xml sitemap, news sitemap, sitemap.xml, robots.txt, Google, Google News, Yahoo, Bing, seo, feed, polylang, image sitemap
 Requires at least: 3.2
 Tested up to: 3.6
-Stable tag: 4.2.1
+Stable tag: 4.2.3
 
 Feeds that comply with the XML Sitemap and Google News protocol for the hungry spiders. Multisite compatible.
 
 == Description ==
 
-This plugin dynamically creates feeds that comply with the **XML Sitemap** and the **Google News Sitemap** protocol. **Multisite** and **Polylang** compatible and there are no files created. Options can be found on **Settings > Reading** to control which sitemaps, which post and taxonomy types are included, how priority is calculated, who to ping and set additional robots.txt rules.
+This plugin dynamically creates feeds that comply with the **XML Sitemap** and the **Google News Sitemap** protocol. **Multisite** and **Polylang** compatible and there are no files created. Options can be found on **Settings > Reading** to control which sitemaps, which post and taxonomy types are included, how priority is calculated, who to ping and set additional robots.txt rules. 
 
-You or site owners on your Multisite network will not be bothered with complicated settings like most other XML Sitemap plugins. The default settings will suffice in most cases and XML sitemap values like ChangeFreq and URL Priority are auto-calculated based on post age and comment activity.
+The main advantage of this plugin over other XML Sitemap plugins is **simplicity**. No need to change file or folder permissions, move files or spend time tweaking difficult plugin options.
+
+You, or site owners on your Multisite network, will not be bothered with complicated settings like most other XML Sitemap plugins. The default settings will suffice in most cases and XML sitemap values like ChangeFreq and URL Priority are auto-calculated based on post age and comment activity.
 
 The XML Sitemap Index becomes instantly available on yourblog.url/sitemap.xml (or yourblog.url/?feed=sitemap) containing references to posts and pages by default, ready for indexing by search engines like Google, Yahoo, MSN, Ask.com and others. When the Google News Sitemap is activated, it will become available on yourblog.url/sitemap-news.xml (or yourblog.url/?feed=sitemap-news), ready for indexing by Google News. Both are automatically referenced in the dynamically created **robots.txt** on yourblog.url/robots.txt to tell search engines where to find your XML Sitemaps. And both are sent by ping to Google and Bing on each new publication.
 
@@ -28,21 +30,22 @@ Please read the FAQ's for info on how to get your articles listed on Google News
 
 = Features = 
 
-* The main advantage of this plugin over other XML Sitemap plugins is **simplicity**. No need to change file or folder permissions, move files or spend time tweaking difficult plugin options.
 * Completely **automatic** post URL _priority_ and _change frequency_ calculation based on post age and comment and trackback activity.
-* Works out-of-the-box, even on **multi-site / shared codebase / multi-blog setups** like WordPress MU, WP 3.0 in MultiSite (WPMS) mode and others. 
-* Also works upon **Network Activate** or placed in **/mu-plugins/** on WP 3.0 in MS mode and WPMU and even takes care to exclude any tags blogs to avoid malus points for link spamming.
-* Compatible with multi-lingual sites using **Polylang** to allow all languages to be indexed equally.
+* Works out-of-the-box, even on **multi-site / shared codebase / multi-blog setups** like WordPress MU, WP 3.0 in MultiSite mode and others. 
+* Supports Image tags and Google News tags which can be configured to include featured images (default) or all images.
+* Supports Google News tags (since version 4.2) in regular sitemaps.
 * Pings Google and Bing on new post publication.
+* Compatible with multi-lingual sites using **Polylang** to allow all languages to be indexed equally.
 * Options to define which post types and taxonomies get included in the sitemap and automatic priority calculation rules.
 * Set priority per post.
+* Exclude individual posts or pages.
 * Option to add new robots.txt rules. These can be used to further control (read: limit) the indexation of various parts of your site and subsequent spread of pagerank accross your sites pages.
 
 
 = Translations =
 
 - **Dutch** * Author: [R.A. van Hagen](http://status301.net) (version 4.2)
-- **French** * Author: [R.A. van Hagen](http://status301.net) (version 4.2) (improved translation or suggestions accepted!)
+- **French** * Author: [R.A. van Hagen](http://status301.net) (version 4.2) (improved translation or suggestions accepted)
 - **Serbian** * Author: [WPdiscounts](http://wpdiscounts.com) (version 4.1) 
 - **Ukrainian** * Author: [Cmd Software](http://www.cmd-soft.com/) (version 4.0) 
 
@@ -83,7 +86,7 @@ Same as above but do a **Network Activate** to make a XML sitemap available for 
 
 = Wordpress MU =
 
-The plugin works best from the **/mu-plugins/** folder where it runs quietly in the background without bothering any blog owner with new options or the need for special knowledge of XML Sitemap submission. Just upload the complete package content to /mu-plugins/ and move the file xml-sitemap.php from the new /mu-plugins/xml-sitemap-feed/ to /mu-plugins/.
+The plugin works best from the **/mu-plugins/** folder where it runs quietly in the background without bothering any blog owner with over-complicated options or the need for special knowledge of XML Sitemap submission. Just upload the complete package content to /mu-plugins/ and move the file xml-sitemap.php from the new /mu-plugins/xml-sitemap-feed/ to /mu-plugins/.
 
 Installed alongside [WordPress MU Sitewide Tags Pages](http://wordpress.org/extend/plugins/wordpress-mu-sitewide-tags/), XML Sitemap Feed will **not** create a sitemap.xml nor change robots.txt for any **tag blogs**. This is done deliberately because they would be full of links outside the tags blogs own domain and subsequently ignored (or worse: penalised) by Google.
 
@@ -102,7 +105,7 @@ You will also want to add the sitemap to your [Google Webmasters Tools account](
 
 = My Google News Sitemap is empty! =
 
-The rules of the Google News Game are that you do not feed the monster any stale food. Older than 2 days is bad. You need to bake him some fresh bread ;)
+The rules of the Google News Game are that you do not feed the monster any stale food. Older than 2 days is bad. You need to whip up some fresh chow ;)
 
 = Can I manipulate values for priority and changefreq? =
 
@@ -256,11 +259,17 @@ Thanks for sharing your translation :)
 
 == Upgrade Notice ==
 
-= 4.2 =
-New: Image & News tags and the possibility to exclude posts and pages on a per post basis.
+= 4.2.3 =
+Bugfix release and split custom post types by year/month
 
 
 == Changelog ==
+
+= 4.2.3 = 
+* BUGFIX: Empty ping options after disabling the main sitemap
+* BUGFIX: Empty language tag for Google News tags in posts sitemap
+* Small back end changes
+* NEW: Custom post types split by year/month
 
 = 4.2 =
 * NEW: Image & News tags 
